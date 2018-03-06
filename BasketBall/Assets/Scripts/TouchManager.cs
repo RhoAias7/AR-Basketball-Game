@@ -17,6 +17,8 @@ public class TouchManager : MonoBehaviour {
 
 	public Rigidbody ball;
 
+	public bool canSwipe = true;
+
 	void Start()
 	{
 		Time.timeScale = 3; //Speeds up the game by 3
@@ -25,15 +27,19 @@ public class TouchManager : MonoBehaviour {
 
 	public void OnTouchDown()//gets call when mouse is pressed
 	{
-		InitialTouchTime = Time.time;
-		InitialTouchPosition = Input.mousePosition;
+		if (canSwipe) {
+			InitialTouchTime = Time.time;
+			InitialTouchPosition = Input.mousePosition;
+		}
 	}
 
 	public void OnTouchUp()//gets call when mouse is not pressed
 	{
-		FinalTouchTime = Time.time;
-		FinalTouchPosition = Input.mousePosition;
-		Ballthrow();
+		if(canSwipe){
+			FinalTouchTime = Time.time;
+			FinalTouchPosition = Input.mousePosition;
+			Ballthrow();
+		}
 	}
 
 	public void Ballthrow()
@@ -44,6 +50,8 @@ public class TouchManager : MonoBehaviour {
 
 		RequireForce = new Vector3 (XaxisForce, YaxisForce/1.6f, -ZaxisForce * 100f);
 		ball.useGravity = true;
+        ball.isKinematic = false;
 		ball.velocity = RequireForce;
+		canSwipe = false;
 	}
 }
